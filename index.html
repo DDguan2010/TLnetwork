@@ -93,10 +93,17 @@ if (signin(getip())!=false){
 
 function getip(){
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", 'https://api.vvhan.com/api/getIpInfo',false); // false for synchronous request
-        xmlHttp.send( null );
+    xmlHttp.open("GET", 'https://ip.useragentinfo.com/json',false); // false for synchronous request
+xmlHttp.onreadystatechange = function() {
+    if (this.readyState === this.DONE) {
+        console.log(this.responseURL);
+    }
+};
+        xmlHttp.send(null);
+        if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
         var resp=JSON.parse(xmlHttp.responseText);
-        return(resp["ip"])
+        return(resp["ip"]);
+        }
 }
     </script>
 </body>
