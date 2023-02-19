@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>铁铃网</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css"/>
+    <script type="text/javascript" src="js/script.js"></script>
+    <style>
+        .bu{
+            border:none;
+            left: 110px;
+            top: 594px;
+            width: 80%;
+            height: 143.69px;
+            opacity: 1;
+            border-radius: 50px;
+            background: rgba(226, 193, 232, 1);
+            box-shadow: 0px 0px 20px 10px rgba(226, 193, 232, 1);
+            font-size: 30px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 0px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h5 id=c></h5>
+        <img src=img/logo.png width="120" height="84"><img>
+        <img src=img/tlw.png height="84"><img>
+        <br><br>
+        <a href='check.html'><button class=bu>签到</button></a>
+        <br><br>
+        <a href='my.html'><button class=bu>个人信息</button></a>
+        <br><br>
+        <img src=img/TLnetwork.png height="30"><img>
+    <center>
+    <script>
+    setTimeout(sginup(getip()), 500)
+var id=None;
+function httpGet(theUrl)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl,false); // false for synchronous request
+        xmlHttp.setRequestHeader('Authorization','Bearer uskFCANhodOXOVsnZY6UYqs');
+        xmlHttp.send( null );
+        var resp=JSON.parse(xmlHttp.responseText);
+        var resp2=JSON.stringify(JSON.parse(xmlHttp.responseText));
+//        document.getElementById("b").innerHTML=resp["data"]["records"][0]["fields"]["用户名"];
+        document.getElementById("c").innerHTML=resp2;
+    }
+function signin(ip){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", 'https://api.vika.cn/fusion/v1/datasheets/dstJYJmL6PFmi3CVeb/records?viewId=viwixF7xlHYxB&pageSize=1000&pageNum=1',false); // false for synchronous request
+        xmlHttp.setRequestHeader('Authorization','Bearer uskFCANhodOXOVsnZY6UYqs');
+        xmlHttp.send( null );
+        var resp=JSON.parse(xmlHttp.responseText);
+    for(var i=0;i<resp["data"]["records"].length;i++){
+        if(getip()==resp["data"]["records"][i]["fields"]["IP"]){
+            id=resp["data"]["records"][i]["recordId"];
+            return false;
+        }
+    }
+    
+
+}
+
+function sginup(ip){
+if (signin(getip())!=false){
+  var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", 'https://api.vika.cn/fusion/v1/datasheets/dstJYJmL6PFmi3CVeb/records?viewId=viwixF7xlHYxB',false); // false for synchronous request
+        xmlHttp.setRequestHeader('Authorization','Bearer uskFCANhodOXOVsnZY6UYqs');
+        xmlHttp.setRequestHeader('Content-Type','application/json');
+        xmlHttp.send(JSON.stringify(
+          {"records":[
+    {
+        "fields": {
+            "用户名": "新用户"+ip,
+            "积分": 5,
+            "上次签到时间": 0,
+            "IP": ip,
+            "用户组别": "普通用户"
+        }
+    }
+]}
+          ));
+          signin(getip());
+}
+}
+
+
+
+
+function getip(){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", 'https://api.vvhan.com/api/getIpInfo',false); // false for synchronous request
+        xmlHttp.send( null );
+        var resp=JSON.parse(xmlHttp.responseText);
+        return(resp["ip"])
+}
+    </script>
+</body>
+</html>
