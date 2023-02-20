@@ -112,7 +112,28 @@ xmlHttp.onreadystatechange = function() {
         }
 }
 
+if (!Date.prototype.truncDay) {
+	Date.prototype.truncDay = function() {
+		var ms = this.getTime();
+		ms -= this.getTimezoneOffset() * 60 * 1000; //getTime得到的值，已被偏移。此处需要修正
+		ms = Math.trunc(ms/(24 * 60 * 60 * 1000)) * (24 * 60 * 60 * 1000);
+		ms += this.getTimezoneOffset() * 60 * 1000; //计算出偏移后的数值
+	    var newTime =new Date(ms);
+	    return newTime;
+	};
+}
+
 function check(){
+if (!Date.prototype.truncDay) {
+	Date.prototype.truncDay = function() {
+		var ms = this.getTime();
+		ms -= this.getTimezoneOffset() * 60 * 1000; //getTime得到的值，已被偏移。此处需要修正
+		ms = Math.trunc(ms/(24 * 60 * 60 * 1000)) * (24 * 60 * 60 * 1000);
+		ms += this.getTimezoneOffset() * 60 * 1000; //计算出偏移后的数值
+	    var newTime =new Date(ms);
+	    return newTime;
+	};
+}
             var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET",'https://api.vika.cn/fusion/v1/datasheets/dstJYJmL6PFmi3CVeb/records?pageSize=100&maxRecords=1000&pageNum=1&sort=&recordIds='+id+'&viewId=viwixF7xlHYxB&fields=&filterByFormula=&cellFormat=json',false); // false for synchronous request
         xmlHttp.setRequestHeader('Authorization','Bearer uskFCANhodOXOVsnZY6UYqs');
@@ -121,7 +142,7 @@ function check(){
         var resp2=JSON.stringify(JSON.parse(xmlHttp.responseText));
 //        document.getElementById("b").innerHTML=resp["data"]["records"][0]["fields"]["用户名"];
         //document.getElementById("text").innerHTML=resp["data"]["records"][0]["fields"]["上次签到时间"];
-        if (((Date.now()-resp["data"]["records"][0]["fields"]["上次签到时间"]) / (1000*3600*24))<1){
+        if (((Date.now()-new Date(resp["data"]["records"][0]["fields"]["上次签到时间"]).truncDay()) / (1000*3600*24))<1){
             
             document.getElementById("checkbu").innerHTML='你今天已经签到过了！'
         }
